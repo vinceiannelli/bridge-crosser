@@ -24,7 +24,7 @@ function welcome() {
 	readlineSync.question('Press enter to continue. WELCOME');
 }
 
-function newRound() {
+async function newRound() {
 	bridgeLength++;
 	// GENERATE SEQUENCE
 	for (let row = 0; row < bridgeLength; row++) {
@@ -46,6 +46,16 @@ function newRound() {
 	// for each element of crossSeq, read element, play sound, draw row with colored tile, draw blank row
 
 	// DRAW BRIDGE, with seq
+	await drawSeqBridge();
+
+	readlineSync.question('Memorize this sequence. Press enter to clear.');
+
+	// DRAW BRIDGE, no seq
+	await drawBridge();
+	await playerMoves();
+}
+
+const drawSeqBridge = async () => {
 	for (let row = 0; row < bridgeLength; row++) {
 		let rowArray = [];
 		for (let tile = 0; tile < bridgeWidth; tile++) {
@@ -57,18 +67,20 @@ function newRound() {
 		}
 		console.log(rowArray.join(' '));
 		//PLAY TILE SOUND HERE
-	}
-	readlineSync.question('Memorize this sequence. Press enter to clear.');
+		player.play(`./${crossSequence[row]}.mp3`, { volume: 1 });
 
-	// DRAW BRIDGE, no seq
+		await wait(1200);
+	}
+};
+
+const drawBridge = async () => {
 	for (let row = 0; row < bridgeLength; row++) {
 		let rowArray = [];
 		for (let tile = 0; tile < bridgeWidth; tile++) rowArray[tile] = '*';
 		console.log(rowArray.join(' '));
+		await wait(200);
 	}
-
-	playerMoves();
-}
+};
 
 function playerMoves() {
 	// input from player, row by row
@@ -83,6 +95,14 @@ function endOfRound() {
 	// deteremine win or loss and do things
 	if (playerWins) newRound();
 }
+
+const wait = async (ms) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve();
+		}, ms);
+	});
+};
 
 welcome();
 newRound();
