@@ -17,8 +17,11 @@
     "url": "https://github.com/vinceiannelli/bridge-crosser/issues"
   },
   "homepage": "https://github.com/vinceiannelli/bridge-crosser#readme",
+  "type": "module",
   "dependencies": {
     "afplay": "^1.0.3",
-    "readline-sync": "^1.4.10"
+    "chalk": "^5.1.2",
+    "readline-sync": "^1.4.10",
+    "terminal-kit": "^3.0.0"
   }
 }

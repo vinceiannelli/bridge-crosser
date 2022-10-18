@@ -1,7 +1,14 @@
-const readlineSync = require('readline-sync');
-const Afplay = require('afplay');
+import readlineSync from 'readline-sync';
+import Afplay from 'afplay';
+import chalk from 'chalk';
+import tk from 'terminal-kit';
 
 let player = new Afplay();
+
+const bridgeWidth = 4;
+let bridgeLength = 1;
+const crossSequence = [];
+let playerWins = false;
 
 function welcome() {
 	console.log(`
@@ -14,56 +21,68 @@ function welcome() {
       
       
     `);
-	newGame();
-	readlineSync.question('Press enter to continue.');
-}
-
-function newGame() {
-	// console.clear();
-	generateSeqElement();
-}
-
-let bridgeWidth = 4;
-let bridgeArray = [];
-let noOfRows = 0;
-let crossSequence = [];
-
-function createBridgeRow() {
-	bridgeArray[noOfRows] = [];
-	for (let i = 0; i < bridgeWidth; i++) {
-		bridgeArray[noOfRows][i] = '*';
-	}
-}
-
-function drawBridge() {
-	for (let i = 0; i < bridgeArray.length; i++) {
-		console.log(bridgeArray[i].join(''));
-	}
+	readlineSync.question('Press enter to continue. WELCOME');
 }
 
 function newRound() {
-	console.clear();
-	readlineSync.question('Press enter to start a new round.');
-	noOfRows++;
-	drawBridge();
-	playSequence();
-	generateSeqElement();
-	readlineSync.question('ROUND OVER. Press enter to start a new round.');
+	bridgeLength++;
+	// GENERATE SEQUENCE
+	for (let row = 0; row < bridgeLength; row++) {
+		if (row === 0) {
+			crossSequence[row] = Math.floor(Math.random() * bridgeWidth + 1);
+		} else {
+			crossSequence[row] = Math.floor(Math.random() * bridgeWidth + 1);
+			// ensure next row is within one tile
+			while (
+				crossSequence[row] >= crossSequence[row - 1] + 2 ||
+				crossSequence[row] <= crossSequence[row - 1] - 2
+			) {
+				crossSequence[row] = Math.floor(Math.random() * bridgeWidth + 1);
+			}
+		}
+	}
+	console.log('cross sequence: ', crossSequence);
+	// draw bridge, row by row, playing sequence elements, spaced by x time in ms
+	// for each element of crossSeq, read element, play sound, draw row with colored tile, draw blank row
+
+	// DRAW BRIDGE, with seq
+	for (let row = 0; row < bridgeLength; row++) {
+		let rowArray = [];
+		for (let tile = 0; tile < bridgeWidth; tile++) {
+			if (tile + 1 === crossSequence[row]) rowArray[tile] = `${chalk.red('*')}`;
+			else {
+				rowArray[tile] = '*';
+			}
+			// console.log(rowArray);
+		}
+		console.log(rowArray.join(' '));
+		//PLAY TILE SOUND HERE
+	}
+	readlineSync.question('Memorize this sequence. Press enter to clear.');
+
+	// DRAW BRIDGE, no seq
+	for (let row = 0; row < bridgeLength; row++) {
+		let rowArray = [];
+		for (let tile = 0; tile < bridgeWidth; tile++) rowArray[tile] = '*';
+		console.log(rowArray.join(' '));
+	}
+
+	playerMoves();
 }
 
-function generateSeqElement() {
-	crossSequence[noOfRows] = Math.floor(Math.random() * 4);
-	console.log(crossSequence);
+function playerMoves() {
+	// input from player, row by row
+	// if tile player moves to matches sequence, successful move
+	// if all rows crossed, round over, player succeeds
+	readlineSync.question('Press enter to WIN THE ROUND.');
+	playerWins = true;
+	endOfRound();
 }
 
-function playSequence() {
-	for (let index in crossSequence) player.play(`./${crossSequence[index] + 1}.mp3`, { volume: 1 });
+function endOfRound() {
+	// deteremine win or loss and do things
+	if (playerWins) newRound();
 }
 
 welcome();
-createBridgeRow();
-newRound();
-createBridgeRow();
-newRound();
-createBridgeRow();
 newRound();
