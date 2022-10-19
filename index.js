@@ -8,11 +8,25 @@ const term = termkit.terminal;
 let player = new Afplay();
 
 const bridgeWidth = 4;
-let bridgeLength = 1;
 const crossSequence = [];
-let playerWins = false;
+let bridgeLength = 1;
+let playerWins = true;
+let round = 1;
+let hiScore = { name: 'YOU', score: 1 };
+
+/*
+
+For SERVER:
+- generate sequence function
+- store high score and show on welcome
+
+
+*/
 
 function welcome() {
+	bridgeLength = 1;
+	round = 1;
+	playerWins = true;
 	console.clear();
 	console.log(`
     
@@ -29,8 +43,10 @@ function welcome() {
   ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
   ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
         
-${chalk.green(` A bridge-crossing 
-   survival game!`)}
+${chalk.green(` A BRIDGE-CROSSING 
+   SURVIVAL GAME!`)}
+
+  ${chalk.yellowBright(`HI SCORE: ${hiScore.name} ${hiScore.score} `)}
 
     `);
 	readlineSync.question('Press enter to continue.');
@@ -54,28 +70,26 @@ async function newRound() {
 		}
 	}
 	console.clear();
-	// console.log('cross sequence: ', crossSequence);  // TEST
 
-	// draw bridge, row by row, playing sequence elements, spaced by x time in ms
-	// for each element of crossSeq, read element, play sound, draw row with colored tile, draw blank row
-
-	// DRAW BRIDGE, with seq
 	await drawSeqBridge();
 
-	readlineSync.question(`
+	console.log(`
 The green tiles ${chalk.green('*')} are safe. 
 All other tiles * will break if you step on them. 
 
-Memorize this sequence! 
+You have only a few seconds to memorize this sequence! 
 
-Press enter to clear and continue.`);
+`);
 
-	// DRAW BRIDGE, no seq
+	await waitEnter(5000 - round * 375);
 	await drawBridge();
 	await playerMoves();
 }
 
 const drawSeqBridge = async () => {
+	term.green(`Round ${round}
+    `);
+	console.log();
 	for (let row = 0; row < bridgeLength; row++) {
 		let rowArray = [`${chalk.blue('~~')}|`, '', '', '', '', `|${chalk.blue('~~')}`];
 		for (let tile = 0 + 1; tile < bridgeWidth + 1; tile++) {
@@ -86,10 +100,10 @@ const drawSeqBridge = async () => {
 			// console.log(rowArray);
 		}
 		console.log(rowArray.join(' '));
-		//PLAY TILE SOUND HERE
+
 		player.play(`./${crossSequence[row]}.mp3`, { volume: 1 });
 
-		await wait(950);
+		await wait(950 - round * 50);
 	}
 };
 
@@ -121,9 +135,6 @@ or you will fall into the river.
 };
 
 function playerMoves() {
-	// input from player, row by row
-	// if tile player moves to matches sequence, successful move
-	// if all rows crossed, round over, player succeeds
 	let tilePosition = 1;
 	let rowPosition = -1;
 
@@ -136,26 +147,6 @@ function playerMoves() {
 	term.right(4);
 
 	while (true) {
-		// console.log(
-		// 	'\x1B[1A\x1B[K|' +
-		// 		new Array(position + 1).join('-') +
-		// 		'O' +
-		// 		new Array(MAX - position + 1).join('-') +
-		// 		'| ' +
-		// 		position
-
-		// );
-
-		////
-		//
-		// MOVE TO TOP
-		// CHANGE MOVES TO MOVE DOWN
-		//
-		// ESTABLISH A GRID with rows and columns, track where cursor is,
-		// if hits a safe tile, play sound
-		// if hits a not-safe tile, end
-		// if hits top row, new round
-
 		key = readlineSync.keyIn('', { hideEchoBack: true, mask: '', limit: 'azxcd ' });
 		if (key === 'a') {
 			if (tilePosition > MIN) {
@@ -203,13 +194,18 @@ function playerMoves() {
 			console.log('O');
 			term.nextLine(bridgeLength - rowPosition);
 			console.log(`${chalk.red('YOU STEPPED ON THE WRONG TILE!')}`);
-			readlineSync.question('Press enter to start a new round.');
+			if (round > hiScore.score) {
+				hiScore.name = readlineSync.question('YOU GOT A HI SCORE! Enter your name:');
+				hiScore.score = round;
+			}
+			readlineSync.question('Press enter to start a new game.');
+			playerWins = false;
 			break;
 		}
 	}
 
 	// readlineSync.question('Press enter to WIN THE ROUND.');
-	playerWins = true;
+	// playerWins = true;
 	endOfRound();
 }
 
@@ -217,13 +213,27 @@ function endOfRound() {
 	// deteremine win or loss and do things
 	term.nextLine(1);
 	readlineSync.question('Press enter to continue.');
-	if (playerWins) newRound();
+	if (playerWins) {
+		round++;
+		newRound();
+	} else {
+		welcome();
+		newRound();
+	}
 }
 
 const wait = async (ms) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve();
+		}, ms);
+	});
+};
+
+const waitEnter = async (ms) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(console.clear());
 		}, ms);
 	});
 };
