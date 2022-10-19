@@ -22,6 +22,7 @@
     "afplay": "^1.0.3",
     "chalk": "^5.1.2",
     "readline-sync": "^1.4.10",
+    "sound-play": "^1.1.0",
     "terminal-kit": "^3.0.0"
   }
 }
