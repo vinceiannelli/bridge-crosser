@@ -1,11 +1,12 @@
 import readlineSync from 'readline-sync';
-import Afplay from 'afplay';
+// import Afplay from 'afplay';
 import chalk from 'chalk';
 import termkit from 'terminal-kit';
+import sound from 'sound-play';
 
 const term = termkit.terminal;
 
-let player = new Afplay();
+// let player = new Afplay();
 
 const bridgeWidth = 4;
 const crossSequence = [];
@@ -105,7 +106,7 @@ const drawSeqBridge = async () => {
 		console.log(rowArray.join(' '));
 
 		// SOUND - filename corresponds to tile
-		player.play(`./audio/${crossSequence[row]}.mp3`, { volume: 1 });
+		sound.play(`./audio/${crossSequence[row]}.mp3`, { volume: 1 });
 
 		// memorization time: progressively shorter / harder
 		await wait(950 - round * 50);
@@ -208,11 +209,11 @@ function playerMoves() {
 			process.stdout.write(`${chalk.green('*')}`);
 			term.left(1); // move back after printing green star
 			// SOUND - play seq based on tile
-			player.play(`./audio/${crossSequence[rowPosition]}.mp3`, { volume: 1 });
+			sound.play(`./audio/${crossSequence[rowPosition]}.mp3`, { volume: 1 });
 			// If player steps on bad tile
 		} else if (rowPosition >= 0) {
 			// SOUND - death
-			player.play(`./audio/fall.mp3`, { volume: 1 });
+			sound.play(`./audio/fall.mp3`, { volume: 1 });
 			// draw a HOLE
 			console.log('O');
 			// move cursor to bottom of bridge
