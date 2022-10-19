@@ -13,17 +13,27 @@ const crossSequence = [];
 let playerWins = false;
 
 function welcome() {
+	console.clear();
 	console.log(`
     
     
-    
-      **** WELCOME TO BRIDGE CROSSER ****
-      
-      
-      
-      
+        ${chalk.yellowBright('𓀠')}
+  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| ${chalk.yellowBright('Welcome')} |${chalk.blue('~~')}
+  ${chalk.blue('~~')}|   ${chalk.yellowBright('to')}    |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| ${chalk.yellowBright('BRIDGE')}  |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| ${chalk.yellowBright('CROSSER')} |${chalk.blue('~~')} 
+  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+        
+${chalk.green(` A bridge-crossing 
+   survival game!`)}
+
     `);
-	readlineSync.question('Press enter to continue. WELCOME');
+	readlineSync.question('Press enter to continue.');
 }
 
 async function newRound() {
@@ -44,14 +54,21 @@ async function newRound() {
 		}
 	}
 	console.clear();
-	console.log('cross sequence: ', crossSequence);
+	// console.log('cross sequence: ', crossSequence);  // TEST
+
 	// draw bridge, row by row, playing sequence elements, spaced by x time in ms
 	// for each element of crossSeq, read element, play sound, draw row with colored tile, draw blank row
 
 	// DRAW BRIDGE, with seq
 	await drawSeqBridge();
 
-	readlineSync.question('Memorize this sequence. Press enter to clear.');
+	readlineSync.question(`
+The green tiles ${chalk.green('*')} are safe. 
+All other tiles * will break if you step on them. 
+
+Memorize this sequence! 
+
+Press enter to clear and continue.`);
 
 	// DRAW BRIDGE, no seq
 	await drawBridge();
@@ -60,9 +77,9 @@ async function newRound() {
 
 const drawSeqBridge = async () => {
 	for (let row = 0; row < bridgeLength; row++) {
-		let rowArray = ['~~|', '', '', '', '', '|~~'];
+		let rowArray = [`${chalk.blue('~~')}|`, '', '', '', '', `|${chalk.blue('~~')}`];
 		for (let tile = 0 + 1; tile < bridgeWidth + 1; tile++) {
-			if (tile === crossSequence[row]) rowArray[tile] = `${chalk.red('*')}`;
+			if (tile === crossSequence[row]) rowArray[tile] = `${chalk.green('*')}`;
 			else {
 				rowArray[tile] = '*';
 			}
@@ -72,15 +89,31 @@ const drawSeqBridge = async () => {
 		//PLAY TILE SOUND HERE
 		player.play(`./${crossSequence[row]}.mp3`, { volume: 1 });
 
-		await wait(1350);
+		await wait(950);
 	}
 };
 
 const drawBridge = async () => {
 	console.clear();
+	console.log(`Move player down, across the bridge.`);
+	term.yellow(`
+
+    Use these keys:
+
+      ← A     D ➡️
+        Z  X  C
+       ↙️   ↓   ↘️
+`);
+	console.log(`
+    
+
+Avoid stepping on the tiles that will break, 
+or you will fall into the river.
+ 
+    `);
 	console.log();
 	for (let row = 0; row < bridgeLength; row++) {
-		let rowArray = ['~~|', '', '', '', '', '|~~'];
+		let rowArray = [`${chalk.blue('~~')}|`, '', '', '', '', `|${chalk.blue('~~')}`];
 		for (let tile = 0 + 1; tile < bridgeWidth + 1; tile++) rowArray[tile] = '*';
 		console.log(rowArray.join(' '));
 		await wait(200);
@@ -156,19 +189,20 @@ function playerMoves() {
 		}
 
 		if (rowPosition >= bridgeLength) {
-			console.log('ROUND COMPLETED!');
+			term.nextLine(1);
+			term.green('ROUND COMPLETED!');
 			break;
 		}
 
 		if (tilePosition === crossSequence[rowPosition]) {
-			process.stdout.write(`${chalk.red('*')}`);
-			term.left(1);
+			process.stdout.write(`${chalk.green('*')}`);
+			term.left(1); // move back after printing green star
 			player.play(`./${crossSequence[rowPosition]}.mp3`, { volume: 1 });
 		} else if (rowPosition >= 0) {
 			player.play(`./fall.mp3`, { volume: 1 });
 			console.log('O');
 			term.nextLine(bridgeLength - rowPosition);
-			console.log('YOU STEPPED ON THE WRONG TILE!');
+			console.log(`${chalk.red('YOU STEPPED ON THE WRONG TILE!')}`);
 			readlineSync.question('Press enter to start a new round.');
 			break;
 		}
@@ -181,6 +215,8 @@ function playerMoves() {
 
 function endOfRound() {
 	// deteremine win or loss and do things
+	term.nextLine(1);
+	readlineSync.question('Press enter to continue.');
 	if (playerWins) newRound();
 }
 
