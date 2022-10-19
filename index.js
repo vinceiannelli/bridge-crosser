@@ -211,8 +211,9 @@ function playerMoves() {
 			term.left(1); // move back after printing green star
 			// SOUND - play seq based on tile
 			sound.play(`./audio/${crossSequence[rowPosition]}.mp3`, { volume: 1 });
-			// If player steps on bad tile
-		} else if (rowPosition >= 0) {
+		}
+		// If player steps on bad tile
+		else if (rowPosition >= 0) {
 			// SOUND - death
 			sound.play(`./audio/fall.mp3`, { volume: 1 });
 			// draw a HOLE
@@ -220,6 +221,8 @@ function playerMoves() {
 			// move cursor to bottom of bridge
 			term.nextLine(bridgeLength - rowPosition);
 			console.log(`${chalk.red('YOU STEPPED ON THE WRONG TILE!')}`);
+
+			// Enter new Hi Score
 			if (round > hiScore.score) {
 				hiScore.name = readlineSync.question('YOU GOT A HI SCORE! Enter your name:');
 				hiScore.score = round;
