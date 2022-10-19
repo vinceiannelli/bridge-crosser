@@ -19,10 +19,11 @@ let hiScore = { name: 'YOU', score: 1 };
 For SERVER:
 - generate sequence function
 - store high score and show on welcome
-
+-  
 
 */
 
+// WELCOME SCREEN
 function welcome() {
 	bridgeLength = 1;
 	round = 1;
@@ -54,6 +55,7 @@ ${chalk.green(` A BRIDGE-CROSSING
 
 async function newRound() {
 	bridgeLength++;
+
 	// GENERATE SEQUENCE
 	for (let row = 0; row < bridgeLength; row++) {
 		if (row === 0) {
@@ -86,6 +88,7 @@ You have only a few seconds to memorize this sequence!
 	await playerMoves();
 }
 
+// draws bridge with sequence reveal
 const drawSeqBridge = async () => {
 	term.green(`Round ${round}
     `);
@@ -101,14 +104,18 @@ const drawSeqBridge = async () => {
 		}
 		console.log(rowArray.join(' '));
 
+		// SOUND - filename corresponds to tile
 		player.play(`./${crossSequence[row]}.mp3`, { volume: 1 });
 
+		// memorization time: progressively shorter / harder
 		await wait(950 - round * 50);
 	}
 };
 
+// draws bridge (no reveal)
 const drawBridge = async () => {
 	console.clear();
+	//INSTRUCTIONS
 	console.log(`Move player down, across the bridge.`);
 	term.yellow(`
 
@@ -135,11 +142,14 @@ or you will fall into the river.
 };
 
 function playerMoves() {
+	// positioning of cursor / player
 	let tilePosition = 1;
 	let rowPosition = -1;
 
+	// constraining lateral movement
 	const MAX = bridgeWidth;
-	const MIN = 0;
+	const MIN = 1;
+
 	let key;
 
 	//MOVE CURSOR TO TOP
@@ -148,19 +158,23 @@ function playerMoves() {
 
 	while (true) {
 		key = readlineSync.keyIn('', { hideEchoBack: true, mask: '', limit: 'azxcd ' });
+		// LEFT
 		if (key === 'a') {
 			if (tilePosition > MIN) {
 				tilePosition--;
 				term.left(2);
 			}
+			// RIGHT
 		} else if (key === 'd') {
 			if (tilePosition < MAX) {
 				tilePosition++;
 				term.right(2);
 			}
+			// DOWN
 		} else if (key === 'x') {
 			term.down(1);
 			rowPosition++;
+			// DOWN-LEFT DIAGONAL
 		} else if (key === 'z') {
 			if (tilePosition > MIN) {
 				tilePosition--;
@@ -168,6 +182,7 @@ function playerMoves() {
 				term.left(2);
 				rowPosition++;
 			}
+			// DOWN-RIGHT DIAGONAL
 		} else if (key === 'c') {
 			if (tilePosition < MAX) {
 				tilePosition++;
@@ -179,19 +194,28 @@ function playerMoves() {
 			break;
 		}
 
+		// If player reaches other side
 		if (rowPosition >= bridgeLength) {
 			term.nextLine(1);
-			term.green('ROUND COMPLETED!');
+			term.green('ROUND COMPLETED!\n');
+			readlineSync.question('Press enter for next round.');
 			break;
 		}
 
+		// If player steps on safe tile
 		if (tilePosition === crossSequence[rowPosition]) {
+			// Draw colored tile to reveal pattern
 			process.stdout.write(`${chalk.green('*')}`);
 			term.left(1); // move back after printing green star
+			// SOUND - play seq based on tile
 			player.play(`./${crossSequence[rowPosition]}.mp3`, { volume: 1 });
+			// If player steps on bad tile
 		} else if (rowPosition >= 0) {
+			// SOUND - death
 			player.play(`./fall.mp3`, { volume: 1 });
+			// draw a HOLE
 			console.log('O');
+			// move cursor to bottom of bridge
 			term.nextLine(bridgeLength - rowPosition);
 			console.log(`${chalk.red('YOU STEPPED ON THE WRONG TILE!')}`);
 			if (round > hiScore.score) {
@@ -204,15 +228,13 @@ function playerMoves() {
 		}
 	}
 
-	// readlineSync.question('Press enter to WIN THE ROUND.');
-	// playerWins = true;
 	endOfRound();
 }
 
 function endOfRound() {
 	// deteremine win or loss and do things
 	term.nextLine(1);
-	readlineSync.question('Press enter to continue.');
+	// readlineSync.question('Press enter to continue.');
 	if (playerWins) {
 		round++;
 		newRound();
@@ -222,6 +244,7 @@ function endOfRound() {
 	}
 }
 
+// WAIT function programmed delays
 const wait = async (ms) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
@@ -230,6 +253,7 @@ const wait = async (ms) => {
 	});
 };
 
+// WAIT for memorization / reveal
 const waitEnter = async (ms) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
