@@ -84,7 +84,7 @@ You have only a few seconds to memorize this sequence!
 
 `);
 
-	await waitEnter(5000 - round * 375);
+	await waitMemorize(5000 - round * 375);
 	await drawBridge();
 	await playerMoves();
 }
@@ -151,6 +151,7 @@ function playerMoves() {
 	const MAX = bridgeWidth;
 	const MIN = 1;
 
+	// keyboard input
 	let key;
 
 	//MOVE CURSOR TO TOP
@@ -255,7 +256,7 @@ const wait = async (ms) => {
 };
 
 // WAIT for memorization / reveal
-const waitEnter = async (ms) => {
+const waitMemorize = async (ms) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve(console.clear());
