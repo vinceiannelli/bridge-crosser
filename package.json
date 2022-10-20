@@ -22,6 +22,8 @@
     "afplay": "^1.0.3",
     "chalk": "^5.1.2",
     "express": "^4.18.2",
+    "mongodb": "^4.11.0",
+    "mongoose": "^6.6.5",
     "node-fetch": "^3.2.10",
     "readline-sync": "^1.4.10",
     "sound-play": "^1.1.0",

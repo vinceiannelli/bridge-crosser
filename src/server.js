@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import express from 'express';
 
 const app = express();
@@ -17,6 +18,49 @@ app.get('/bridgeSequence', (request, response) => {
 
 	response.json(jsonSequence);
 });
+
+//
+//
+//
+//
+//
+// DB PLAY
+//
+// connect to db
+await mongoose
+	.connect('mongodb+srv://viannelli:n8dIp6pXhvrYLz9z@cluster0.wmpww0r.mongodb.net/?retryWrites=true&w=majority')
+	.then(() => console.log('database connected'));
+
+const { Schema, model } = mongoose;
+
+const hiScoreSchema = new Schema({
+	playerName: String,
+	playerScore: Number,
+});
+
+const HiScore = model('HiScore', hiScoreSchema);
+
+// // Create a new blog post object
+// const bcScore = new HiScore({
+// 	playerName: 'newPlayer',
+// 	playerScore: 2,
+// });
+
+// // Insert the article in our MongoDB database
+// await bcScore.save();
+
+//FIND in db
+const dbScore = await HiScore.findById('63514c4ed1610d8db87dfd4c').exec();
+
+let bcHiScore = dbScore.playerScore;
+let bcHiScorePlayer = dbScore.playerName;
+
+console.log(bcHiScorePlayer, bcHiScore);
+//
+//
+//
+//
+//
 
 function generateTileSequence(bridgeLength, bridgeWidth) {
 	const crossSequence = [];
