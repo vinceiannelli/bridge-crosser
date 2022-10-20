@@ -3,13 +3,14 @@ import readlineSync from 'readline-sync';
 import chalk from 'chalk';
 import termkit from 'terminal-kit';
 import sound from 'sound-play';
+import fetch from 'node-fetch';
 
 const term = termkit.terminal;
 
 // let player = new Afplay();
 
 const bridgeWidth = 4;
-const crossSequence = [];
+let crossSequence;
 let bridgeLength = 1;
 let playerWins = true;
 let round = 1;
@@ -20,7 +21,7 @@ let hiScore = { name: 'YOU', score: 1 };
 For SERVER:
 - generate sequence function
 - store high score and show on welcome
--  
+-  CONST B & Y for 
 
 */
 
@@ -57,21 +58,10 @@ ${chalk.green(` A BRIDGE-CROSSING
 async function newRound() {
 	bridgeLength++;
 
-	// GENERATE SEQUENCE
-	for (let row = 0; row < bridgeLength; row++) {
-		if (row === 0) {
-			crossSequence[row] = Math.floor(Math.random() * bridgeWidth + 1);
-		} else {
-			crossSequence[row] = Math.floor(Math.random() * bridgeWidth + 1);
-			// ensure next row is within one tile
-			while (
-				crossSequence[row] >= crossSequence[row - 1] + 2 ||
-				crossSequence[row] <= crossSequence[row - 1] - 2
-			) {
-				crossSequence[row] = Math.floor(Math.random() * bridgeWidth + 1);
-			}
-		}
-	}
+	// GENERATE SEQUENCE via SERVER
+	const response = await fetch(`http://localhost:4000/bridgeSequence?length=${bridgeLength}&width=${bridgeWidth}`);
+	crossSequence = await response.json();
+
 	console.clear();
 
 	await drawSeqBridge();
@@ -84,7 +74,7 @@ You have only a few seconds to memorize this sequence!
 
 `);
 
-	await waitMemorize(5000 - round * 375);
+	await waitMemorize(5000 - round * 275);
 	await drawBridge();
 	await playerMoves();
 }
@@ -106,7 +96,7 @@ const drawSeqBridge = async () => {
 		console.log(rowArray.join(' '));
 
 		// SOUND - filename corresponds to tile
-		sound.play(`./audio/${crossSequence[row]}.mp3`, { volume: 1 });
+		sound.play(`../audio/${crossSequence[row]}.mp3`, { volume: 1 });
 
 		// memorization time: progressively shorter / harder
 		await wait(950 - round * 50);
@@ -210,12 +200,12 @@ function playerMoves() {
 			process.stdout.write(`${chalk.green('*')}`);
 			term.left(1); // move back after printing green star
 			// SOUND - play seq based on tile
-			sound.play(`./audio/${crossSequence[rowPosition]}.mp3`, { volume: 1 });
+			sound.play(`../audio/${crossSequence[rowPosition]}.mp3`, { volume: 1 });
 		}
 		// If player steps on bad tile
 		else if (rowPosition >= 0) {
 			// SOUND - death
-			sound.play(`./audio/fall.mp3`, { volume: 1 });
+			sound.play(`../audio/fall.mp3`, { volume: 1 });
 			// draw a HOLE
 			console.log('O');
 			// move cursor to bottom of bridge
@@ -224,7 +214,7 @@ function playerMoves() {
 
 			// Enter new Hi Score
 			if (round > hiScore.score) {
-				hiScore.name = readlineSync.question('YOU GOT A HI SCORE! Enter your name:');
+				hiScore.name = readlineSync.question('YOU GOT A HI SCORE! \n\nEnter your name:');
 				hiScore.score = round;
 			}
 			readlineSync.question('Press enter to start a new game.');
