@@ -1,5 +1,4 @@
 import readlineSync from 'readline-sync';
-// import Afplay from 'afplay';
 import chalk from 'chalk';
 import termkit from 'terminal-kit';
 import sound from 'sound-play';
@@ -7,14 +6,13 @@ import fetch from 'node-fetch';
 
 const term = termkit.terminal;
 
-// let player = new Afplay();
-
 const bridgeWidth = 4;
+const DIFFICULTY_MULTIPLIER = 275;
+const BASE_MEMORIZATION_TIME = 5000;
 let crossSequence;
 let bridgeLength = 1;
 let playerWins = true;
 let round = 1;
-// ** GET HI SCORE FROM DB **
 let hiScore = { name: 'YOU', score: 1 };
 
 /*
@@ -47,7 +45,6 @@ const waitMemorize = async (ms) => {
 async function getHiScore() {
 	const response = await fetch(`http://localhost:4000/getHiScore`);
 	hiScore = await response.json();
-	console.log(hiScore);
 	await wait(1200);
 }
 
@@ -58,6 +55,7 @@ function welcome() {
 	bridgeLength = 1;
 	round = 1;
 	playerWins = true;
+
 	console.clear();
 	console.log(`
     
@@ -102,7 +100,7 @@ You have only a few seconds to memorize this sequence!
 
 `);
 
-	await waitMemorize(5000 - round * 275);
+	await waitMemorize(BASE_MEMORIZATION_TIME - round * DIFFICULTY_MULTIPLIER);
 	await drawBridge();
 	await playerMoves();
 }
