@@ -161,7 +161,7 @@ or you will fall into the river.
 	}
 };
 
-function playerMoves() {
+async function playerMoves() {
 	// positioning of cursor / player
 	let tilePosition = 1;
 	let rowPosition = -1;
@@ -178,7 +178,7 @@ function playerMoves() {
 	term.right(4);
 
 	while (true) {
-		key = readlineSync.keyIn('', { hideEchoBack: true, mask: '', limit: 'azxcd ' });
+		key = readlineSync.keyIn('', { hideEchoBack: true, mask: '', limit: 'azxcd' });
 		// LEFT
 		if (key === 'a') {
 			if (tilePosition > MIN) {
@@ -245,6 +245,11 @@ function playerMoves() {
 			if (round > hiScore.score) {
 				hiScore.name = readlineSync.question('YOU GOT A HI SCORE! \n\nEnter your name:');
 				hiScore.score = round;
+				// send hi score to SERVER
+				const response = await fetch(
+					`http://localhost:4000/newHiScore?player=${hiScore.name}&score=${hiScore.score}`
+				);
+				await response.json();
 			}
 			readlineSync.question('Press enter to start a new game.');
 			playerWins = false;

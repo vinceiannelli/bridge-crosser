@@ -3,7 +3,7 @@ import express from 'express';
 
 const app = express();
 const PORT = 4000;
-let hiScore = { name: 'YOU', score: 1 };
+// let hiScore = { name: 'YOU', score: 1 };
 
 app.use(express.json());
 
@@ -34,9 +34,10 @@ const HiScore = model('HiScore', hiScoreSchema);
 
 // // Create a new blog post object
 // const bcScore = new HiScore({
-// 	playerName: 'newPlayer',
-// 	playerScore: 2,
+// 	playerName: '',
+// 	playerScore: '',
 // });
+const bcScore = await HiScore.findOne();
 
 // // Insert the article in our MongoDB database
 // await bcScore.save();
@@ -63,7 +64,7 @@ app.get('/bridgeSequence', (request, response) => {
 	response.json(jsonSequence);
 });
 
-/// NOT WORKING YET
+/// WORKING!
 app.get('/getHiScore', async (request, response) => {
 	let dbScore = await getHiScoreDB();
 	console.log(dbScore);
@@ -76,18 +77,23 @@ app.get('/getHiScore', async (request, response) => {
 });
 
 async function getHiScoreDB() {
-	const score = await HiScore.findById('63514c4ed1610d8db87dfd4c').exec();
-	return score;
+	const score = await HiScore.findOne();
+	bcScore.playerScore = score.playerScore;
+	bcScore.playerName = score.playerName;
+	return bcScore;
 }
 
-// app.get('/newHiScore', (request, response) => {
-// 	let length = request.query.length;
-// 	let width = request.query.width;
+app.get('/newHiScore', async (request, response) => {
+	let playerScore = request.query.score;
+	let playerName = request.query.player;
+	// let dbScore = {};
+	bcScore.playerScore = playerScore;
+	bcScore.playerName = playerName;
+	await bcScore.save();
+	console.log(bcScore);
 
-// 	let jsonSequence = generateTileSequence(length, width);
-
-// 	response.json(jsonSequence);
-// });
+	response.json(bcScore);
+});
 
 function generateTileSequence(bridgeLength, bridgeWidth) {
 	const crossSequence = [];
