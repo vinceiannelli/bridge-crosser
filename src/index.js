@@ -7,20 +7,20 @@ import fetch from 'node-fetch';
 const term = termkit.terminal;
 
 const bridgeWidth = 4;
-const DIFFICULTY_MULTIPLIER = 275;
+const DIFFICULTY_MULTIPLIER = 315;
 const BASE_MEMORIZATION_TIME = 5000;
 let crossSequence;
 let bridgeLength = 1;
 let playerWins = true;
 let round = 1;
 let hiScore = { name: 'YOU', score: 1 };
+const w = chalk.yellow;
 
 /*
 
 TO DO:
 
--  CONST B & Y for difficulty
-
+- break for waits
 
 */
 
@@ -45,7 +45,7 @@ const waitMemorize = async (ms) => {
 async function getHiScore() {
 	const response = await fetch(`http://localhost:4000/getHiScore`);
 	hiScore = await response.json();
-	await wait(1200);
+	// await wait(1200);
 }
 
 await getHiScore();
@@ -78,7 +78,28 @@ ${chalk.green(` A BRIDGE-CROSSING
   ${chalk.yellowBright(`HI SCORE: ${hiScore.name} ${hiScore.score} `)}
 
     `);
-	readlineSync.question('Press enter to continue.');
+	readlineSync.question('Press enter to continue...');
+	console.clear();
+	console.log(` In ${w('BRIDGE CROSSER')},
+your goal is to move 
+ your player safely
+ across the bridge.
+	
+  Move your player 
+  using these keys:
+
+   ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} ➡️
+     ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
+    ↙️    ↓    ↘️
+`);
+	console.log(`
+Avoid stepping on the 
+tiles that will break, 
+  or you will fall 
+   into the river.
+ 
+    `);
+	readlineSync.question('Press enter to continue...');
 }
 
 async function newRound() {
@@ -93,10 +114,18 @@ async function newRound() {
 	await drawSeqBridge();
 
 	console.log(`
-The green tiles ${chalk.green('*')} are safe. 
-All other tiles * will break if you step on them. 
+The green tiles 
+       ${chalk.green('*')} 
+   are safe. 
 
-You have only a few seconds to memorize this sequence! 
+The rest * will
+ break if you 
+ step on them. 
+
+You have only a 
+few seconds to 
+${chalk.green(`   MEMORIZE 
+THIS SEQUENCE`)}! 
 
 `);
 
@@ -133,21 +162,26 @@ const drawSeqBridge = async () => {
 const drawBridge = async () => {
 	console.clear();
 	//INSTRUCTIONS
-	console.log(`Move player down, across the bridge.`);
-	term.yellow(`
+	console.log(`Move player down, 
+across the bridge.`);
+	term.white(`
 
-    Use these keys:
+ Use these keys
+  to move your
+    player:
 
-      ← A     D ➡️
-        Z  X  C
-       ↙️   ↓   ↘️
+ ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} ➡️
+   ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
+  ↙️    ↓    ↘️
 `);
 	console.log(`
     
-
-Avoid stepping on the tiles that will break, 
-or you will fall into the river.
- 
+Avoid stepping on 
+ the tiles that 
+  will break or
+  you will fall 
+ into the river.
+	 
     `);
 	console.log();
 	for (let row = 0; row < bridgeLength; row++) {
