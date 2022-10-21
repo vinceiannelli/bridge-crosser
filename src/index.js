@@ -19,11 +19,10 @@ let hiScore = { name: 'YOU', score: 1 };
 
 /*
 
-For SERVER:
-- generate sequence function
-- store high score and show on welcome
--  CONST B & Y for 
-- get HI SCORE from db
+TO DO:
+
+-  CONST B & Y for difficulty
+
 
 */
 

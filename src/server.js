@@ -11,13 +11,6 @@ app.listen(PORT, () => {
 	console.log(`Bridge Crosser server is listening on port ${PORT}.`);
 });
 
-//
-//
-//
-//
-//
-// DB PLAY
-//
 // connect to db
 await mongoose
 	.connect('mongodb+srv://viannelli:n8dIp6pXhvrYLz9z@cluster0.wmpww0r.mongodb.net/?retryWrites=true&w=majority')
@@ -25,36 +18,19 @@ await mongoose
 
 const { Schema, model } = mongoose;
 
+// db schema
 const hiScoreSchema = new Schema({
 	playerName: String,
 	playerScore: Number,
 });
 
+// db model / doc
 const HiScore = model('HiScore', hiScoreSchema);
 
-// // Create a new blog post object
-// const bcScore = new HiScore({
-// 	playerName: '',
-// 	playerScore: '',
-// });
+// get hi score from db
 const bcScore = await HiScore.findOne();
 
-// // Insert the article in our MongoDB database
-// await bcScore.save();
-
-//FIND in db
-// const dbScore = await HiScore.findById('63514c4ed1610d8db87dfd4c').exec();
-
-// let bcHiScore = dbScore.playerScore;
-// let bcHiScorePlayer = dbScore.playerName;
-
-// console.log(bcHiScorePlayer, bcHiScore);
-//
-//
-//
-//
-//
-
+// ENDPOINT: generate random sequence
 app.get('/bridgeSequence', (request, response) => {
 	let length = request.query.length;
 	let width = request.query.width;
@@ -64,7 +40,7 @@ app.get('/bridgeSequence', (request, response) => {
 	response.json(jsonSequence);
 });
 
-/// WORKING!
+/// ENDPOINT: get hi score
 app.get('/getHiScore', async (request, response) => {
 	let dbScore = await getHiScoreDB();
 	console.log(dbScore);
@@ -76,13 +52,7 @@ app.get('/getHiScore', async (request, response) => {
 	response.json(dbHiScore);
 });
 
-async function getHiScoreDB() {
-	const score = await HiScore.findOne();
-	bcScore.playerScore = score.playerScore;
-	bcScore.playerName = score.playerName;
-	return bcScore;
-}
-
+// ENDPOINT: update hi score on server
 app.get('/newHiScore', async (request, response) => {
 	let playerScore = request.query.score;
 	let playerName = request.query.player;
@@ -94,6 +64,13 @@ app.get('/newHiScore', async (request, response) => {
 
 	response.json(bcScore);
 });
+
+async function getHiScoreDB() {
+	const score = await HiScore.findOne();
+	bcScore.playerScore = score.playerScore;
+	bcScore.playerName = score.playerName;
+	return bcScore;
+}
 
 function generateTileSequence(bridgeLength, bridgeWidth) {
 	const crossSequence = [];
@@ -113,7 +90,3 @@ function generateTileSequence(bridgeLength, bridgeWidth) {
 	}
 	return crossSequence;
 }
-
-// let jsonSequence = JSON.stringify(generateTileSequence(4, 4));
-
-// console.log(jsonSequence);
