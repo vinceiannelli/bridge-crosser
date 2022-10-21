@@ -3,20 +3,12 @@ import express from 'express';
 
 const app = express();
 const PORT = 4000;
+let hiScore = { name: 'YOU', score: 1 };
 
 app.use(express.json());
 
 app.listen(PORT, () => {
 	console.log(`Bridge Crosser server is listening on port ${PORT}.`);
-});
-
-app.get('/bridgeSequence', (request, response) => {
-	let length = request.query.length;
-	let width = request.query.width;
-
-	let jsonSequence = generateTileSequence(length, width);
-
-	response.json(jsonSequence);
 });
 
 //
@@ -50,17 +42,52 @@ const HiScore = model('HiScore', hiScoreSchema);
 // await bcScore.save();
 
 //FIND in db
-const dbScore = await HiScore.findById('63514c4ed1610d8db87dfd4c').exec();
+// const dbScore = await HiScore.findById('63514c4ed1610d8db87dfd4c').exec();
 
-let bcHiScore = dbScore.playerScore;
-let bcHiScorePlayer = dbScore.playerName;
+// let bcHiScore = dbScore.playerScore;
+// let bcHiScorePlayer = dbScore.playerName;
 
-console.log(bcHiScorePlayer, bcHiScore);
+// console.log(bcHiScorePlayer, bcHiScore);
 //
 //
 //
 //
 //
+
+app.get('/bridgeSequence', (request, response) => {
+	let length = request.query.length;
+	let width = request.query.width;
+
+	let jsonSequence = generateTileSequence(length, width);
+
+	response.json(jsonSequence);
+});
+
+/// NOT WORKING YET
+app.get('/getHiScore', async (request, response) => {
+	let dbScore = await getHiScoreDB();
+	console.log(dbScore);
+	let bcHiScore = dbScore.playerScore;
+	let bcHiScorePlayer = dbScore.playerName;
+
+	let dbHiScore = { name: bcHiScorePlayer, score: bcHiScore };
+
+	response.json(dbHiScore);
+});
+
+async function getHiScoreDB() {
+	const score = await HiScore.findById('63514c4ed1610d8db87dfd4c').exec();
+	return score;
+}
+
+// app.get('/newHiScore', (request, response) => {
+// 	let length = request.query.length;
+// 	let width = request.query.width;
+
+// 	let jsonSequence = generateTileSequence(length, width);
+
+// 	response.json(jsonSequence);
+// });
 
 function generateTileSequence(bridgeLength, bridgeWidth) {
 	const crossSequence = [];

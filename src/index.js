@@ -14,6 +14,7 @@ let crossSequence;
 let bridgeLength = 1;
 let playerWins = true;
 let round = 1;
+// ** GET HI SCORE FROM DB **
 let hiScore = { name: 'YOU', score: 1 };
 
 /*
@@ -22,8 +23,36 @@ For SERVER:
 - generate sequence function
 - store high score and show on welcome
 -  CONST B & Y for 
+- get HI SCORE from db
 
 */
+
+// WAIT function programmed delays
+const wait = async (ms) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve();
+		}, ms);
+	});
+};
+
+// WAIT for memorization / reveal
+const waitMemorize = async (ms) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(console.clear());
+		}, ms);
+	});
+};
+
+async function getHiScore() {
+	const response = await fetch(`http://localhost:4000/getHiScore`);
+	hiScore = await response.json();
+	console.log(hiScore);
+	await wait(1200);
+}
+
+await getHiScore();
 
 // WELCOME SCREEN
 function welcome() {
@@ -238,24 +267,6 @@ function endOfRound() {
 		newRound();
 	}
 }
-
-// WAIT function programmed delays
-const wait = async (ms) => {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve();
-		}, ms);
-	});
-};
-
-// WAIT for memorization / reveal
-const waitMemorize = async (ms) => {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve(console.clear());
-		}, ms);
-	});
-};
 
 welcome();
 newRound();
