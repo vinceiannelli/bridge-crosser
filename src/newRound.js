@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import fetch from 'node-fetch';
-import { playerMoves } from './playerMoves';
-import { drawSeqBridge, drawBridge } from './drawBridge';
+import { playerMoves } from './playerMoves.js';
+import { drawSeqBridge, drawBridge } from './drawBridge.js';
 import {
 	bridgeLength,
 	bridgeWidth,
@@ -10,7 +10,7 @@ import {
 	BASE_MEMORIZATION_TIME,
 	round,
 	DIFFICULTY_MULTIPLIER,
-} from './index';
+} from './index.js';
 
 export async function newRound() {
 	bridgeLength++;

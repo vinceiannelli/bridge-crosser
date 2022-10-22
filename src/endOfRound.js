@@ -1,6 +1,6 @@
-import { welcome } from './welcome';
-import { newRound } from './newRound';
-import { term, playerWins, round } from './index';
+import { welcome } from './welcome.js';
+import { newRound } from './newRound.js';
+import { term, playerWins, round } from './index.js';
 
 export function endOfRound() {
 	// deteremine win or loss and do things

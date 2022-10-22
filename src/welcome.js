@@ -1,12 +1,15 @@
 import readlineSync from 'readline-sync';
 import chalk from 'chalk';
-import { bridgeLength, round, playerWins, hiScore, w } from './index';
+import { hiScore, w } from './index.js';
+let bridgeLength = 1;
+let round = 1;
+let playerWins = true;
 
 // WELCOME SCREEN
 export function welcome() {
-	bridgeLength = 1;
-	round = 1;
-	playerWins = true;
+	// bridgeLength = 1;
+	// round = 1;
+	// playerWins = true;
 
 	console.clear();
 	console.log(`

@@ -2,8 +2,8 @@ import readlineSync from 'readline-sync';
 import chalk from 'chalk';
 import sound from 'sound-play';
 import fetch from 'node-fetch';
-import { bridgeWidth, term, bridgeLength, crossSequence, round, hiScore, playerWins } from './index';
-import { endOfRound } from './endOfRound';
+import { bridgeWidth, term, bridgeLength, crossSequence, round, hiScore, playerWins } from './index.js';
+import { endOfRound } from './endOfRound.js';
 
 export async function playerMoves() {
 	// positioning of cursor / player

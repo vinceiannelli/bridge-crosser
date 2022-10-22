@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import sound from 'sound-play';
-import { term, round, bridgeLength, bridgeWidth, crossSequence, wait, w } from './index';
+import { term, round, bridgeLength, bridgeWidth, crossSequence, wait, w } from './index.js';
 
 // draws bridge with sequence reveal
 export const drawSeqBridge = async () => {
