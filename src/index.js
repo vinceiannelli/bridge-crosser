@@ -57,6 +57,7 @@ function welcome() {
 	playerWins = true;
 
 	console.clear();
+	sound.play(`../audio/hit-welcome.mp3`, { volume: 1 });
 	console.log(`
     
     
@@ -248,6 +249,7 @@ async function playerMoves() {
 
 		// If player reaches other side
 		if (rowPosition >= bridgeLength) {
+			sound.play(`../audio/hit-win.mp3`, { volume: 1 });
 			term.nextLine(1);
 			term.green('ROUND COMPLETED!\n');
 			readlineSync.question('Press enter for next round.');
