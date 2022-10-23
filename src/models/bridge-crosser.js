@@ -1,5 +1,5 @@
-import { HiScore } from '../server.js';
-import { bcScore } from '../server.js';
+import { HiScore } from '../db/mongoose.js';
+import { bcScore } from '../db/mongoose.js';
 
 export async function getHiScoreDB() {
 	const score = await HiScore.findOne();

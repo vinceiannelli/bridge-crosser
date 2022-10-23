@@ -2,7 +2,7 @@ import express from 'express';
 
 import { getHiScoreDB, generateTileSequence } from '../models/bridge-crosser.js';
 
-import { bcScore } from '../server.js';
+import { bcScore } from '../db/mongoose.js';
 
 const app = express();
 export const bridgeSequence = express.Router();
