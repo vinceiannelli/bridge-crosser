@@ -16,3 +16,5 @@ export const HiScore = model('HiScore', hiScoreSchema);
 // get hi score from db
 
 export const bcScore = await HiScore.findOne();
+
+// mongoose.disconnect();

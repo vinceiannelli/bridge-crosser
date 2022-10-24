@@ -15,7 +15,11 @@ let bridgeLength = 1;
 let playerWins = true;
 let round = 1;
 let hiScore = { name: 'YOU', score: 1 };
-const w = chalk.yellow;
+
+// consts for colors
+const y = chalk.yellow;
+const yb = chalk.yellowBright;
+const b = chalk.blue;
 
 // WAIT function programmed delays
 const wait = async (ms) => {
@@ -35,6 +39,7 @@ const waitMemorize = async (ms) => {
 	});
 };
 
+// gets hi score from server / db
 async function getHiScore() {
 	const response = await fetch(`http://localhost:4000/getHiScore`);
 	hiScore = await response.json();
@@ -52,27 +57,27 @@ function welcome() {
 	console.log(`
     
     
-        ${chalk.yellowBright('𓀠')}
-  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| ${chalk.yellowBright('Welcome')} |${chalk.blue('~~')}
-  ${chalk.blue('~~')}|   ${chalk.yellowBright('to')}    |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| ${chalk.yellowBright('BRIDGE')}  |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| ${chalk.yellowBright('CROSSER')} |${chalk.blue('~~')} 
-  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
-  ${chalk.blue('~~')}| * * * * |${chalk.blue('~~')}
+        ${yb('𓀠')}
+  ${b('~~')}| * * * * |${b('~~')}
+  ${b('~~')}| * * * * |${b('~~')}
+  ${b('~~')}| * * * * |${b('~~')}
+  ${b('~~')}| ${yb('Welcome')} |${b('~~')}
+  ${b('~~')}|   ${yb('to')}    |${b('~~')}
+  ${b('~~')}| ${yb('BRIDGE')}  |${b('~~')}
+  ${b('~~')}| ${yb('CROSSER')} |${b('~~')} 
+  ${b('~~')}| * * * * |${b('~~')}
+  ${b('~~')}| * * * * |${b('~~')}
+  ${b('~~')}| * * * * |${b('~~')}
         
 ${chalk.green(` A BRIDGE-CROSSING 
    SURVIVAL GAME!`)}
 
-  ${chalk.yellowBright(`HI SCORE: ${hiScore.name} ${hiScore.score} `)}
+  ${yb(`HI SCORE: ${hiScore.name} ${hiScore.score} `)}
 
     `);
 	readlineSync.question('Press enter to continue...');
 	console.clear();
-	console.log(` In ${w('BRIDGE CROSSER')},
+	console.log(` In ${y('BRIDGE CROSSER')},
 your goal is to move 
  your player safely
  across the bridge.
@@ -80,8 +85,8 @@ your goal is to move
   Move your player 
   using these keys:
 
-   ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} →
-     ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
+   ← ${y('[')}A${y(']')}   ${y('[')}D${y(']')} →
+     ${y('[')}Z${y(']')}${y('[')}X${y(']')}${y('[')}C${y(']')}
     ↙    ↓    ↘
 `);
 	console.log(`
@@ -104,8 +109,9 @@ async function newRound() {
 	console.clear();
 
 	await drawSeqBridge();
-
-	console.log(`
+	// show this message until round 4
+	if (round <= 4)
+		console.log(`
 The green tiles 
        ${chalk.green('*')} 
    are safe. 
@@ -115,7 +121,8 @@ The rest * will
  step on them. 
 
 You have only a 
-few seconds to 
+few seconds to `);
+	console.log(`
 ${chalk.green(`   MEMORIZE 
 THIS SEQUENCE`)}! 
 
@@ -132,7 +139,7 @@ const drawSeqBridge = async () => {
     `);
 	console.log();
 	for (let row = 0; row < bridgeLength; row++) {
-		let rowArray = [`${chalk.blue('~~')}|`, '', '', '', '', `|${chalk.blue('~~')}`];
+		let rowArray = [`${b('~~')}|`, '', '', '', '', `|${b('~~')}`];
 		for (let tile = 0 + 1; tile < bridgeWidth + 1; tile++) {
 			if (tile === crossSequence[row]) rowArray[tile] = `${chalk.green('*')}`;
 			else {
@@ -162,8 +169,8 @@ across the bridge.`);
    to move your
      player:
 
-  ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} →
-    ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
+  ← ${y('[')}A${y(']')}   ${y('[')}D${y(']')} →
+    ${y('[')}Z${y(']')}${y('[')}X${y(']')}${y('[')}C${y(']')}
    ↙    ↓    ↘
 `);
 	console.log(`
@@ -177,7 +184,7 @@ Avoid stepping on
     `);
 	console.log();
 	for (let row = 0; row < bridgeLength; row++) {
-		let rowArray = [`${chalk.blue('~~')}|`, '', '', '', '', `|${chalk.blue('~~')}`];
+		let rowArray = [`${b('~~')}|`, '', '', '', '', `|${b('~~')}`];
 		for (let tile = 0 + 1; tile < bridgeWidth + 1; tile++) rowArray[tile] = '*';
 		console.log(rowArray.join(' '));
 		await wait(200);
