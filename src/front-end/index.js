@@ -9,20 +9,13 @@ const term = termkit.terminal;
 const bridgeWidth = 4;
 const DIFFICULTY_MULTIPLIER = 315;
 const BASE_MEMORIZATION_TIME = 5000;
-let crossSequence;
+
+let crossSequence; // the randomized sequence
 let bridgeLength = 1;
 let playerWins = true;
 let round = 1;
 let hiScore = { name: 'YOU', score: 1 };
 const w = chalk.yellow;
-
-/*
-
-TO DO:
-
-- break for waits
-
-*/
 
 // WAIT function programmed delays
 const wait = async (ms) => {
@@ -47,8 +40,6 @@ async function getHiScore() {
 	hiScore = await response.json();
 	// await wait(1200);
 }
-
-await getHiScore();
 
 // WELCOME SCREEN
 function welcome() {
@@ -89,9 +80,9 @@ your goal is to move
   Move your player 
   using these keys:
 
-   ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} ➡️
+   ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} →
      ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
-    ↙️    ↓    ↘️
+    ↙    ↓    ↘
 `);
 	console.log(`
 Avoid stepping on the 
@@ -167,13 +158,13 @@ const drawBridge = async () => {
 across the bridge.`);
 	term.white(`
 
- Use these keys
-  to move your
-    player:
+  Use these keys
+   to move your
+     player:
 
- ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} ➡️
-   ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
-  ↙️    ↓    ↘️
+  ← ${w('[')}A${w(']')}   ${w('[')}D${w(']')} →
+    ${w('[')}Z${w(']')}${w('[')}X${w(']')}${w('[')}C${w(']')}
+   ↙    ↓    ↘
 `);
 	console.log(`
     
@@ -306,5 +297,6 @@ function endOfRound() {
 	}
 }
 
+await getHiScore();
 welcome();
 newRound();
