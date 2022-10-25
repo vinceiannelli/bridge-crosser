@@ -1,6 +1,6 @@
 # bridge-crosser
 
-       𓀠
+## 𓀠
 
 The most intense
 BRIDGE-CROSSING
@@ -9,7 +9,7 @@ you will ever PLAY!
 
 ### Play Bridge Crosser
 
-To play `bridge-crosser`, try the following terminal commands with `node@15.x` and `npm@7.x` or newer:
+To play `bridge-crosser`, clone this project and try the following terminal commands:
 
 ```sh
 # Install all dependencies
