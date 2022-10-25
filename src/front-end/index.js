@@ -24,10 +24,10 @@ const b = chalk.blue;
 /*
 
 TO DO:
-- test sound via zoom
+- test sound via zoom - DONE
 - prevent input echo during bridge draw (or only allow input at specific moments)
 - (randomized) footsteps
-- README file update
+- README file update - DONE
 
 
 */
