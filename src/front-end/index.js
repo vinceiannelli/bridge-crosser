@@ -3,7 +3,6 @@ import chalk from 'chalk';
 import termkit from 'terminal-kit';
 import sound from 'sound-play';
 import fetch from 'node-fetch';
-import readline from 'readline';
 
 const term = termkit.terminal;
 
