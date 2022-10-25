@@ -1,11 +1,6 @@
 # bridge-crosser
 
-## 𓀠
-
-The most intense
-BRIDGE-CROSSING
-SURVIVAL GAME
-you will ever PLAY!
+## 𓀠 The most intense BRIDGE-CROSSING SURVIVAL GAME you will ever PLAY!
 
 ### Play Bridge Crosser
 
