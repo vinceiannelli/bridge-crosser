@@ -27,6 +27,7 @@ TO DO:
 - test sound via zoom
 - prevent input echo during bridge draw (or only allow input at specific moments)
 - (randomized) footsteps
+- README file update
 
 
 */

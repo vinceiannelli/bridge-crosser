@@ -2,19 +2,35 @@
 
        𓀠
 
-~~| \* \* \* \* |~~
-~~| \* \* \* \* |~~
-~~| \* \* \* \* |~~
-~~| Welcome |~~
-~~| to |~~
-~~| BRIDGE |~~
-~~| CROSSER |~~
-~~| \* \* \* \* |~~
-~~| \* \* \* \* |~~
-~~| \* \* \* \* |~~
-
 The most intense
 BRIDGE-CROSSING
 SURVIVAL GAME
-you will ever
-PLAY!
+you will ever PLAY!
+
+### Play Bridge Crosser
+
+To play `bridge-crosser`, try the following terminal commands with `node@15.x` and `npm@7.x` or newer:
+
+```sh
+# Install all dependencies
+npm install
+```
+
+Quick start...
+
+```sh
+# Start game using bash script
+./startgame.sh
+```
+
+... or start both server and front-end.
+
+```sh
+# start server ...
+cd src/back-end/
+node server.js
+
+# ... then start front-end
+cd ../front-end/
+node index.js
+```
