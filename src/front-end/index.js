@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import termkit from 'terminal-kit';
 import sound from 'sound-play';
 import fetch from 'node-fetch';
+import readline from 'readline';
 
 const term = termkit.terminal;
 
@@ -20,6 +21,16 @@ let hiScore = { name: 'YOU', score: 1 };
 const y = chalk.yellow;
 const yb = chalk.yellowBright;
 const b = chalk.blue;
+
+/*
+
+TO DO:
+- test sound via zoom
+- prevent input echo during bridge draw (or only allow input at specific moments)
+- (randomized) footsteps
+
+
+*/
 
 // WAIT function programmed delays
 const wait = async (ms) => {
@@ -53,6 +64,7 @@ function welcome() {
 	playerWins = true;
 
 	console.clear();
+	sound.play(`../audio/mountain-stream.wav`, { volume: 1 });
 	sound.play(`../audio/hit-welcome.mp3`, { volume: 1 });
 	console.log(`
     
@@ -160,6 +172,7 @@ const drawSeqBridge = async () => {
 // draws bridge (no reveal)
 const drawBridge = async () => {
 	console.clear();
+
 	//INSTRUCTIONS
 	console.log(`Move player down, 
 across the bridge.`);
