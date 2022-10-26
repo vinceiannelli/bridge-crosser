@@ -9,7 +9,11 @@ export const bridgeSequence = express.Router();
 export const getHiScore = express.Router();
 export const newHiScore = express.Router();
 
+////////////////////
+//
 // ENDPOINT: generate random sequence
+//
+////////////////////
 bridgeSequence.get('/', (request, response) => {
 	let length = request.query.length;
 	let width = request.query.width;
@@ -19,7 +23,11 @@ bridgeSequence.get('/', (request, response) => {
 	response.json(jsonSequence);
 });
 
+////////////////////
+//
 /// ENDPOINT: get hi score
+//
+////////////////////
 getHiScore.get('/', async (request, response) => {
 	let dbScore = await getHiScoreDB();
 	console.log(dbScore);
@@ -31,7 +39,11 @@ getHiScore.get('/', async (request, response) => {
 	response.json(dbHiScore);
 });
 
+////////////////////
+//
 // ENDPOINT: update hi score on server
+//
+////////////////////
 newHiScore.get('/', async (request, response) => {
 	let playerScore = request.query.score;
 	let playerName = request.query.player;

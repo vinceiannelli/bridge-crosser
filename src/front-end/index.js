@@ -1,19 +1,13 @@
-import readlineSync, { setEncoding } from 'readline-sync';
+import readlineSync from 'readline-sync';
 import chalk from 'chalk';
 import termkit from 'terminal-kit';
 import sound from 'sound-play';
 import fetch from 'node-fetch';
 
-// import readline from 'readline';
-
-// const rl = readline.createInterface({
-// 	input: process.stdin,
-// });
-
 const term = termkit.terminal;
 
 const bridgeWidth = 4;
-const DIFFICULTY_MULTIPLIER = 315;
+const DIFFICULTY_MULTIPLIER = 315; // adds progressive challenge as you reach higher levels
 const BASE_MEMORIZATION_TIME = 5000;
 
 let crossSequence; // the randomized sequence
@@ -30,15 +24,14 @@ const b = chalk.blue;
 /*
 
 TO DO:
-- test sound via zoom - DONE
-- prevent input echo during bridge draw (or only allow input at specific moments)
 - (randomized) footsteps
-- README file update - DONE
-
+- disconnect db connection (how and when?)
 
 */
 
+//////
 // WAIT function programmed delays
+//////
 const wait = async (ms) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
@@ -47,7 +40,9 @@ const wait = async (ms) => {
 	});
 };
 
+//////
 // WAIT for memorization / reveal
+//////
 const waitMemorize = async (ms) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
@@ -56,22 +51,30 @@ const waitMemorize = async (ms) => {
 	});
 };
 
-// gets hi score from server / db
+//////
+// GETS HI SCORE from server / db
+//////
 async function getHiScore() {
 	const response = await fetch(`http://localhost:4000/getHiScore`);
 	hiScore = await response.json();
 	// await wait(1200);
 }
 
-// WELCOME SCREEN
+////////////////////
+//
+//  WELCOME - intro and welcome
+//
+////////////////////
 function welcome() {
+	// resets values for new game
 	bridgeLength = 1;
 	round = 1;
 	playerWins = true;
-	///
-	process.stdin.setRawMode(true);
-	///
+
+	process.stdin.setRawMode(true); // prevents user key input from printing
 	console.clear();
+
+	//SOUNDS
 	sound.play(`../audio/mountain-stream.mp3`, { volume: 1 });
 	sound.play(`../audio/hit-welcome.mp3`, { volume: 1 });
 	console.log(`
@@ -116,12 +119,17 @@ tiles that will break,
    into the river.
  
     `);
-	///
-	process.stdin.setRawMode(false);
-	///
+
+	process.stdin.setRawMode(false); // allows user input again
+
 	readlineSync.question('Press enter to continue...');
 }
 
+////////////////////
+//
+// NEW ROUND - executed for each round
+//
+////////////////////
 async function newRound() {
 	bridgeLength++;
 
@@ -150,17 +158,20 @@ ${chalk.green(`   MEMORIZE
 THIS SEQUENCE`)}! 
 
 `);
-
+	// progressive difficulty as player reaches higher levels
 	await waitMemorize(BASE_MEMORIZATION_TIME - round * DIFFICULTY_MULTIPLIER);
 	await drawBridge();
 	await playerMoves();
 }
 
-// draws bridge with sequence reveal
+////////////////////
+//
+// DRAW SEQUENCE BRIDGE - draws bridge step by step while revealing cross sequence
+//
+////////////////////
 const drawSeqBridge = async () => {
-	///
 	process.stdin.setRawMode(true);
-	///
+
 	term.green(`Round ${round}
     `);
 	console.log();
@@ -181,18 +192,20 @@ const drawSeqBridge = async () => {
 		// memorization time: progressively shorter / harder
 		await wait(950 - round * 50);
 	}
-	///
+
 	process.stdin.setRawMode(false);
-	///
 };
 
-// draws bridge (no reveal)
+////////////////////
+//
+// DRAW BRIDGE - draws bridge step by step with no sequence
+//
+////////////////////
 const drawBridge = async () => {
 	console.clear();
 
-	///
 	process.stdin.setRawMode(true);
-	///
+
 	//INSTRUCTIONS
 	console.log(`Move player down, 
 across the bridge.`);
@@ -227,6 +240,11 @@ Avoid stepping on
 	///
 };
 
+////////////////////
+//
+// PLAYER MOVES - handles player movement inputs and processes tile success and failure
+//
+////////////////////
 async function playerMoves() {
 	// positioning of cursor / player
 	let tilePosition = 1;
@@ -327,19 +345,25 @@ async function playerMoves() {
 	endOfRound();
 }
 
+////////////////////
+//
+// END OF ROUND - determine win or loss
+//
+////////////////////
 function endOfRound() {
-	// deteremine win or loss and do things
 	term.nextLine(1);
-	// readlineSync.question('Press enter to continue.');
+	// Player wins round
 	if (playerWins) {
 		round++;
 		newRound();
 	} else {
+		// Player loses round and starts over
 		welcome();
 		newRound();
 	}
 }
 
+// get Hi Score from server / db
 await getHiScore();
 welcome();
 newRound();

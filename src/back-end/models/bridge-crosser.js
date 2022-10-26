@@ -1,6 +1,11 @@
 import { HiScore } from '../db/mongoose.js';
 import { bcScore } from '../db/mongoose.js';
 
+////////////////////
+//
+/// for get hi score ENDPOINT
+//
+////////////////////
 export async function getHiScoreDB() {
 	const score = await HiScore.findOne();
 	bcScore.playerScore = score.playerScore;
@@ -8,6 +13,11 @@ export async function getHiScoreDB() {
 	return bcScore;
 }
 
+////////////////////
+//
+/// for generate random sequence ENDPOINT
+//
+////////////////////
 export function generateTileSequence(bridgeLength, bridgeWidth) {
 	const crossSequence = [];
 	for (let row = 0; row < bridgeLength; row++) {

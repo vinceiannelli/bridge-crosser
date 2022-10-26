@@ -10,11 +10,12 @@ const hiScoreSchema = new Schema({
 	playerName: String,
 	playerScore: Number,
 });
+
 // db model / doc
-
 export const HiScore = model('HiScore', hiScoreSchema);
-// get hi score from db
 
+// get hi score from db
 export const bcScore = await HiScore.findOne();
 
+// to implement in future
 // mongoose.disconnect();
