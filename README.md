@@ -1,6 +1,6 @@
 # bridge-crosser
 
-## 𓀠 The most intense BRIDGE-CROSSING SURVIVAL GAME you will ever PLAY! 𓀠
+𓀠 The most intense BRIDGE-CROSSING SURVIVAL GAME you will ever PLAY! 𓀠
 
 ### Play Bridge Crosser
 
@@ -30,7 +30,10 @@ cd ../front-end/
 node index.js
 ```
 
-All sounds by Vince Iannelli, with credit to:
+### All sounds by Vince Iannelli
+
+With credit to:
+
 Superscriri for recorded mountain stream
 https://freesound.org/people/Supersciri/sounds/350511/
 
