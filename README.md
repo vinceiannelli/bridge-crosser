@@ -29,3 +29,10 @@ node server.js
 cd ../front-end/
 node index.js
 ```
+
+All sounds by Vince Iannelli, with credit to:
+Superscriri for recorded mountain stream
+https://freesound.org/people/Supersciri/sounds/350511/
+
+TiredHippo for Wilheim Splash
+https://freesound.org/people/TiredHippo/sounds/318189/

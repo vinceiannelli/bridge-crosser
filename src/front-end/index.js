@@ -1,8 +1,14 @@
-import readlineSync from 'readline-sync';
+import readlineSync, { setEncoding } from 'readline-sync';
 import chalk from 'chalk';
 import termkit from 'terminal-kit';
 import sound from 'sound-play';
 import fetch from 'node-fetch';
+
+// import readline from 'readline';
+
+// const rl = readline.createInterface({
+// 	input: process.stdin,
+// });
 
 const term = termkit.terminal;
 
@@ -62,9 +68,11 @@ function welcome() {
 	bridgeLength = 1;
 	round = 1;
 	playerWins = true;
-
+	///
+	process.stdin.setRawMode(true);
+	///
 	console.clear();
-	sound.play(`../audio/mountain-stream.wav`, { volume: 1 });
+	sound.play(`../audio/mountain-stream.mp3`, { volume: 1 });
 	sound.play(`../audio/hit-welcome.mp3`, { volume: 1 });
 	console.log(`
     
@@ -108,6 +116,9 @@ tiles that will break,
    into the river.
  
     `);
+	///
+	process.stdin.setRawMode(false);
+	///
 	readlineSync.question('Press enter to continue...');
 }
 
@@ -147,6 +158,9 @@ THIS SEQUENCE`)}!
 
 // draws bridge with sequence reveal
 const drawSeqBridge = async () => {
+	///
+	process.stdin.setRawMode(true);
+	///
 	term.green(`Round ${round}
     `);
 	console.log();
@@ -167,12 +181,18 @@ const drawSeqBridge = async () => {
 		// memorization time: progressively shorter / harder
 		await wait(950 - round * 50);
 	}
+	///
+	process.stdin.setRawMode(false);
+	///
 };
 
 // draws bridge (no reveal)
 const drawBridge = async () => {
 	console.clear();
 
+	///
+	process.stdin.setRawMode(true);
+	///
 	//INSTRUCTIONS
 	console.log(`Move player down, 
 across the bridge.`);
@@ -202,6 +222,9 @@ Avoid stepping on
 		console.log(rowArray.join(' '));
 		await wait(200);
 	}
+	///
+	process.stdin.setRawMode(false);
+	///
 };
 
 async function playerMoves() {
