@@ -26,6 +26,7 @@ const b = chalk.blue;
 TO DO:
 - (randomized) footsteps
 - disconnect db connection (how and when?)
+- fix shell script touch file (and create stop-game script)
 
 */
 
@@ -301,9 +302,28 @@ async function playerMoves() {
 
 		// If player reaches other side
 		if (rowPosition >= bridgeLength) {
-			sound.play(`../audio/hit-win.mp3`, { volume: 1 });
-			term.nextLine(1);
-			term.green('ROUND COMPLETED!\n');
+			if ((round + 1) % 5 === 0) {
+				console.clear();
+				console.log(`
+				
+
+
+Congratulations!
+
+${y(` BRIDGE CROSSER`)},
+ you've reached
+   ROUND ${y(round + 1)}!!
+				
+
+
+				
+				`);
+				sound.play(`../audio/hit-fiver.mp3`, { volume: 1 });
+			} else {
+				sound.play(`../audio/hit-win.mp3`, { volume: 1 });
+				term.nextLine(1);
+				term.green('ROUND COMPLETED!\n');
+			}
 			readlineSync.question('Press enter for next round.');
 			break;
 		}
