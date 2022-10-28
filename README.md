@@ -2,7 +2,11 @@
 
 𓀠 The most intense BRIDGE-CROSSING SURVIVAL GAME you will ever PLAY! 𓀠
 
-![](demo-movie.mov)
+
+
+https://user-images.githubusercontent.com/112829038/198430747-6ba9bd34-0b35-44f5-a818-3efddf87c776.mov
+
+
 
 ### Play Bridge Crosser
 
